@@ -20,6 +20,12 @@ var appendTask = function (task) {
     .on('click', function () {
       updateTaskStatus(task.id);
     });
+
+  $(`[data-id=${task.id}]`)
+    .find('.remove-btn')
+    .on('click', function () {
+      deleteTask(task.id);
+    });
 };
 
 // Request to get all tasks from API
@@ -99,6 +105,23 @@ var updateTaskStatus = function (id) {
   });
 };
 
+// Request to delete task
+var deleteTask = function (id) {
+  var confirm = window.confirm('Are you sure you want to delete this task?');
+
+  if (!confirm) return;
+  $.ajax({
+    type: 'DELETE',
+    url: `https://fewd-todolist-api.onrender.com/tasks/${id}?api_key=132`,
+    success: function (response, textStatus) {
+      $(`[data-id=${id}]`).remove();
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    },
+  });
+};
+
 // Handler for new task form
 $('#addTask').on('submit', function (event) {
   event.preventDefault();
@@ -113,12 +136,6 @@ $('#addTask').on('submit', function (event) {
   console.log(task);
 
   addTask(task);
-});
-
-$('.status').on('click', function () {
-  var id = $(this).closest('tr').attr('data-id');
-  var content = $(this).closest('tr').children('.taskContent');
-  var due = $(this).closest('tr').children('.dueDate');
 });
 
 getAllTasks();
