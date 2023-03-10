@@ -1,16 +1,27 @@
+// Helper function to append task to tasks table
 var appendTask = function (task) {
+  const status = task.completed ? 'Completed' : 'Incomplete';
+  const dueDate = new Date(task.due).toLocaleString();
   $('.tasks tbody').append(`
-    <tr>
-        <td>${task.content}</td>
-        <td>${task.due}</td>
+    <tr data-id=${task.id}>
+        <td class="taskContent">${task.content}</td>
+        <td class="taskDueDate">${dueDate}</td>
+        <td class="taskStatus">${status}</td>
         <td>
-            <button class="btn btn-danger btn-sm">Delete</button>
-            <button class="btn btn-success btn-sm">Mark completed</button>
+            <button class="btn btn-danger btn-sm remove">Delete</button>
+            <button class="btn btn-success btn-sm update">Mark completed</button>
         </td>
     </tr>
 `);
+
+  $(`[data-id=${task.id}]`)
+    .find('.update')
+    .on('click', function () {
+      updateTaskStatus(task.id);
+    });
 };
 
+// Request to get all tasks from API
 var getAllTasks = function () {
   $.ajax({
     type: 'GET',
@@ -29,10 +40,13 @@ var getAllTasks = function () {
         appendTask(task);
       });
     },
-    error: function (request, textStatus, errorMessage) {},
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    },
   });
 };
 
+// Request to add new task
 var addTask = function (task) {
   $.ajax({
     type: 'POST',
@@ -42,19 +56,38 @@ var addTask = function (task) {
     data: JSON.stringify({
       task: {
         content: task.content,
-        due: task.dueDate,
+        due: task.due,
       },
     }),
     success: function (response, textStatus) {
       var task = response.task;
       appendTask(task);
     },
-    error: function (request, textStatus, errorMessage) {},
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    },
   });
 };
 
-getAllTasks();
+// Request to update task status
+var updateTaskStatus = function (id) {
+  $.ajax({
+    type: 'PUT',
+    url: `https://fewd-todolist-api.onrender.com/tasks/${id}/mark_complete?api_key=132`,
+    contentType: 'application/json',
+    success: function (response, textStatus) {
+      console.log(response);
+      var updatedTask = response.task;
+      var updatedStatus = updatedTask.completed ? 'Completed' : 'Incomplete';
+      $(`[data-id=${id}]`).children('.taskStatus').html(updatedStatus);
+    },
+    error: function (request, textStatus, errorMessage) {
+      console.log(errorMessage);
+    },
+  });
+};
 
+// Handler for new task form
 $('#addTask').on('submit', function (event) {
   event.preventDefault();
   var taskContent = $(this).find('[name=taskContentInput]').val();
@@ -65,5 +98,15 @@ $('#addTask').on('submit', function (event) {
     due: dueDate,
   };
 
+  console.log(task);
+
   addTask(task);
 });
+
+$('.status').on('click', function () {
+  var id = $(this).closest('tr').attr('data-id');
+  var content = $(this).closest('tr').children('.taskContent');
+  var due = $(this).closest('tr').children('.dueDate');
+});
+
+getAllTasks();
