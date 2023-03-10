@@ -1,11 +1,13 @@
 // Helper function to append task to tasks table
 var appendTask = function (task) {
-  const status = task.completed ? 'Completed' : 'Incomplete';
-  const dueDate = new Date(task.due).toLocaleString();
-  const updateButtonText = task.completed ? 'Reopen' : 'Mark completed';
+  var status = task.completed ? 'Completed' : 'Incomplete';
+  var createdDate = new Date(task.created_at).toLocaleString();
+  var dueDate = new Date(task.due).toLocaleString();
+  var updateButtonText = task.completed ? 'Reopen' : 'Mark completed';
   $('.tasks tbody').append(`
     <tr data-id=${task.id}>
         <td class="taskContent">${task.content}</td>
+        <td class="taskCreatedDate">${createdDate}</td>
         <td class="taskDueDate">${dueDate}</td>
         <td class="taskStatus">${status}</td>
         <td>
@@ -26,6 +28,15 @@ var appendTask = function (task) {
     .on('click', function () {
       deleteTask(task.id);
     });
+};
+
+// Helper function for sorting task array
+var sortTasksByCreatedDate = function (a, b) {
+  if (a.created_at < b.created_at) return -1;
+
+  if (a.created_at > b.created_at) return 1;
+
+  return 0;
 };
 
 // Request to get all tasks from API
@@ -62,7 +73,9 @@ var getAllTasks = function (filter = 'all') {
 
       $('.tasks tbody').html('');
 
-      filteredTasks.forEach(function (task) {
+      var sortedTasks = filteredTasks.sort(sortTasksByCreatedDate);
+
+      sortedTasks.forEach(function (task) {
         appendTask(task);
       });
     },
@@ -152,9 +165,10 @@ $('#addTask').on('submit', function (event) {
     due: dueDate,
   };
 
-  console.log(task);
-
   addTask(task);
+
+  $(this).find('[name=taskContentInput]').val('');
+  $(this).find('[name=dueDateInput]').val('');
 });
 
 // Get filtered tasks
