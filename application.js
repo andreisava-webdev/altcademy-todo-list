@@ -2,20 +2,21 @@
 var appendTask = function (task) {
   const status = task.completed ? 'Completed' : 'Incomplete';
   const dueDate = new Date(task.due).toLocaleString();
+  const updateButtonText = task.completed ? 'Reopen' : 'Mark completed';
   $('.tasks tbody').append(`
     <tr data-id=${task.id}>
         <td class="taskContent">${task.content}</td>
         <td class="taskDueDate">${dueDate}</td>
         <td class="taskStatus">${status}</td>
         <td>
-            <button class="btn btn-danger btn-sm remove">Delete</button>
-            <button class="btn btn-success btn-sm update">Mark completed</button>
+            <button class="btn btn-danger btn-sm remove-btn">Delete</button>
+            <button class="btn btn-success btn-sm update-btn">${updateButtonText}</button>
         </td>
     </tr>
 `);
 
   $(`[data-id=${task.id}]`)
-    .find('.update')
+    .find('.update-btn')
     .on('click', function () {
       updateTaskStatus(task.id);
     });
@@ -71,15 +72,26 @@ var addTask = function (task) {
 
 // Request to update task status
 var updateTaskStatus = function (id) {
+  var currentStatus =
+    $(`[data-id=${id}]`).children('.taskStatus').text() === 'Completed'
+      ? true
+      : false;
+
   $.ajax({
     type: 'PUT',
-    url: `https://fewd-todolist-api.onrender.com/tasks/${id}/mark_complete?api_key=132`,
+    url: !currentStatus
+      ? `https://fewd-todolist-api.onrender.com/tasks/${id}/mark_complete?api_key=132`
+      : `https://fewd-todolist-api.onrender.com/tasks/${id}/mark_active?api_key=132`,
     contentType: 'application/json',
     success: function (response, textStatus) {
       console.log(response);
       var updatedTask = response.task;
       var updatedStatus = updatedTask.completed ? 'Completed' : 'Incomplete';
+      var updatedButtonText = updatedTask.completed
+        ? 'Reopen'
+        : 'Mark completed';
       $(`[data-id=${id}]`).children('.taskStatus').html(updatedStatus);
+      $(`[data-id=${id}]`).find('.update-btn').html(updatedButtonText);
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
