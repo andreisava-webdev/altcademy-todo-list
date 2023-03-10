@@ -29,13 +29,14 @@ var appendTask = function (task) {
 };
 
 // Request to get all tasks from API
-var getAllTasks = function () {
+var getAllTasks = function (filter = 'all') {
   $.ajax({
     type: 'GET',
     url: 'https://fewd-todolist-api.onrender.com/tasks?api_key=132',
     dataType: 'json',
     success: function (response, textStatus) {
       var tasks = response.tasks;
+      var filteredTasks = [];
 
       if (tasks.length === 0) {
         $('.tasks').append(
@@ -43,7 +44,25 @@ var getAllTasks = function () {
         );
       }
 
-      tasks.forEach(function (task) {
+      if (filter === 'all') {
+        filteredTasks = tasks;
+      }
+
+      if (filter === 'active') {
+        filteredTasks = tasks.filter(function (task) {
+          return !task.completed;
+        });
+      }
+
+      if (filter === 'completed') {
+        filteredTasks = tasks.filter(function (task) {
+          return task.completed;
+        });
+      }
+
+      $('.tasks tbody').html('');
+
+      filteredTasks.forEach(function (task) {
         appendTask(task);
       });
     },
@@ -136,6 +155,19 @@ $('#addTask').on('submit', function (event) {
   console.log(task);
 
   addTask(task);
+});
+
+// Get filtered tasks
+$('.show-all-btn').on('click', function () {
+  getAllTasks('all');
+});
+
+$('.show-active-btn').on('click', function () {
+  getAllTasks('active');
+});
+
+$('.show-completed-btn').on('click', function () {
+  getAllTasks('completed');
 });
 
 getAllTasks();

@@ -25,42 +25,6 @@
     <div class="container">
       <h1 class="text-primary text-center">To Do List</h1>
 
-      <div class="row mt-2 tasks">
-        <div class="col-8 mx-auto">
-          <table class="table">
-            <thead class="bg-primary text-light">
-              <tr>
-                <th>Description</th>
-                <th>Due Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <!-- <tr class="align-middle">
-                <td>Doing a project</td>
-                <td>25/03/2023 14:00</td>
-                <td>
-                  <button class="btn btn-danger btn-sm">Delete</button>
-                  <button class="btn btn-success btn-sm">Mark completed</button>
-                </td>
-              </tr> -->
-            </tbody>
-          </table>
-        </div>
-        <!-- <div
-          class="col-8 mx-auto d-flex justify-content-between align-items-center bg-light p-2 task"
-        >
-          <span>Doing a project</span>
-
-          <div class="d-flex gap-2">
-            <button class="btn btn-danger btn-sm">Delete</button>
-            <button class="btn btn-success btn-sm">Mark completed</button>
-          </div>
-        </div> -->
-      </div>
-
       <div class="row">
         <div class="col-auto mx-auto">
           <form
@@ -88,6 +52,35 @@
               </button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-8 mx-auto">
+          <button class="btn btn-info btn-sm show-all-btn">Show all</button>
+          <button class="btn btn-info btn-sm show-active-btn">
+            Show active
+          </button>
+          <button class="btn btn-info btn-sm show-completed-btn">
+            Show completed
+          </button>
+        </div>
+      </div>
+
+      <div class="row mt-2 tasks">
+        <div class="col-8 mx-auto">
+          <table class="table">
+            <thead class="bg-primary text-light">
+              <tr>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </div>
