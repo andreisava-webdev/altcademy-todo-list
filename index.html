@@ -25,8 +25,30 @@
     <div class="container">
       <h1 class="text-primary text-center">To Do List</h1>
 
-      <div class="row">
-        <div
+      <div class="row mt-2 tasks">
+        <div class="col-8 mx-auto">
+          <table class="table">
+            <thead class="bg-primary text-light">
+              <tr>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- <tr class="align-middle">
+                <td>Doing a project</td>
+                <td>25/03/2023 14:00</td>
+                <td>
+                  <button class="btn btn-danger btn-sm">Delete</button>
+                  <button class="btn btn-success btn-sm">Mark completed</button>
+                </td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <!-- <div
           class="col-8 mx-auto d-flex justify-content-between align-items-center bg-light p-2 task"
         >
           <span>Doing a project</span>
@@ -35,6 +57,36 @@
             <button class="btn btn-danger btn-sm">Delete</button>
             <button class="btn btn-success btn-sm">Mark completed</button>
           </div>
+        </div> -->
+      </div>
+
+      <div class="row">
+        <div class="col-auto mx-auto">
+          <form
+            class="row row-cols-lg-auto g-3 align-items-center"
+            id="addTask"
+          >
+            <div class="col-12">
+              <input
+                name="taskContentInput"
+                type="text"
+                placeholder="Task description"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-12">
+              <input
+                name="dueDateInput"
+                type="datetime-local"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary btn-sm">
+                Add task
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
